@@ -55,6 +55,14 @@ class ZendeskPush(object):
 
         return result
 
+class Root(object):
+    def __init__(self):
+        self.push = ZendeskPush()
+
+    @cherrypy.expose
+    def healthz(self):
+        return
+
 
 def CORS():
     cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
@@ -62,7 +70,7 @@ def CORS():
 
 if __name__ == '__main__':
     cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)
-    push = ZendeskPush()
+    root = Root()
 
     config = {
         'global': {
@@ -75,4 +83,4 @@ if __name__ == '__main__':
             'tools.CORS.on': True,
         }
     }
-    cherrypy.quickstart(push, '/push', config=config)
+    cherrypy.quickstart(root, '/', config=config)
